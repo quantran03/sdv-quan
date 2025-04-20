@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --outfile=dist/main.js && @tailwindcss -i ./src/styles.css -o ./dist/styles.css"
+    "build": "esbuild src/main.ts --bundle --outfile=dist/main.js && pnpx @tailwindcss/cli -i ./src/styles.css -o ./dist/styles.css"
   },
   "keywords": [],
   "author": "",
