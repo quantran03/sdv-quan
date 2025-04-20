@@ -4,16 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && @tailwindcss -i ./src/styles.css -o ./dist/styles.css"
+    "build": "esbuild src/main.ts --bundle --outfile=dist/main.js && @tailwindcss -i ./src/styles.css -o ./dist/styles.css"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.8.1",
   "devDependencies": {
-    "autoprefixer": "^10.4.21",
-    "tailwindcss": "^4.1.4",
     "@tailwindcss/cli": "^4.1.4",
+    "@types/d3": "^7.4.3",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.2",
+    "tailwindcss": "^4.1.4",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "d3": "^7.9.0"
   }
 }
