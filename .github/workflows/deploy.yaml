@@ -26,13 +26,10 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Godly build step
-        run: sed 's|dist/||g' index.html > dist/index.html
-
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist'
+          path: '.'
 
   deploy:
     needs: build_site
