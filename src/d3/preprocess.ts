@@ -37,7 +37,7 @@ export function createFinalDF(data: d3.InternMap<string, d3.InternMap<string, nu
     for (const [team, [bronze, silver, gold]] of teamMap) {
       finalDF.push({
         Year: +year,
-        Team: team,
+        Team: team === "URS" || team === "ROC" ? "RUS" : team, // haha Russia
         Bronze_count: bronze,
         Silver_count: silver,
         Gold_count: gold,

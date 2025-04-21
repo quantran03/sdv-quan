@@ -6,9 +6,9 @@ export function multiLineGraph(data: MedalAgg[]) {
   if (!container)
     return;
 
-  const width = container.clientWidth;
-  const height = container.clientHeight;
-  const marginTop = 20;
+  const width = container.clientWidth - 5;
+  const height = container.clientHeight - 5;
+  const marginTop = 40;
   const marginRight = 20;
   const marginBottom = 30;
   const marginLeft = 40;
@@ -42,27 +42,49 @@ export function multiLineGraph(data: MedalAgg[]) {
         .attr("stroke-opacity", 0.1))
     .call(g => g.append("text")
         .attr("x", -marginLeft)
-        .attr("y", 10)
+        .attr("y", 20)
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
         .text("Weighted medal count"));
   
-  const points = data.map((d) => [x(d.Year), y(d.Medal_sum), d.Team]);
-  const groups = d3.rollup(points, v => Object.assign(v, {z: v[0][2]}), d => d[2]);   
+  const pointsMap = data.map(d => ({
+    x: +d.Year,
+    y: +d.Medal_sum,
+    team: d.Team
+  }));  
 
-  const line = d3.line();
+  const points = data.map((d) => [x(d.Year), y(d.Medal_sum), d.Team]);
   
+  const color = d3.scaleOrdinal(d3.schemeTableau10)
+    .domain(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999']);
+  const groups = d3.group(pointsMap, d => d.team);
+  
+  const line = d3.line<{ x: number; y: number }>()
+    .x(d => x(d.x))
+    .y(d => y(d.y))
+    .curve(d3.curveCardinal.tension(0.5));
+
   const path = svg.append("g")
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-linecap", "round")
+    .attr("fill", "none")
+    .attr("stroke-width", 1.5)
+    .attr("stroke-linejoin", "round")
+    .attr("stroke-linecap", "round")
     .selectAll("path")
     .data(groups.values())
     .join("path")
-      .style("mix-blend-mode", "multiply")
-      .attr("d", d3.line());
+    .attr("stroke",  function([team]: any){ return color(team) })
+    .style("mix-blend-mode", "multiply")
+    .attr("d", line)
+    .each(function () {
+      const totalLength = (this as SVGPathElement).getTotalLength();
+      d3.select(this)
+        .attr("stroke-dasharray", totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+        .duration(1500)
+        .ease(d3.easeCubicInOut)
+        .attr("stroke-dashoffset", 0);
+    });;
 
   // Add an invisible layer for the interactive tip.
   const dot = svg.append("g")
@@ -90,12 +112,12 @@ export function multiLineGraph(data: MedalAgg[]) {
     const [xm, ym] = d3.pointer(event);
     const i = d3.leastIndex(points, ([x, y]: any) => Math.hypot(x - xm, y - ym));
     const [x, y, k] = points[i!];
-    path.style("stroke", ({z}) => z === k ? null : "#ddd").filter(({z}) => z === k).raise();
+    path.style("stroke", (x) => x[0].team === k ? null : "#ddd").filter((x) => x[0].team === k).raise();
     dot.attr("transform", `translate(${x},${y})`);
     dot.select("text").text(k);
     svg.property("value", data[i!]).dispatch("input");
   }
-
+    
   function pointerentered() {
     path.style("mix-blend-mode", null).style("stroke", "#ddd");
     dot.attr("display", null);
