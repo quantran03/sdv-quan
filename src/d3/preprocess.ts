@@ -4,6 +4,47 @@ export async function loadData<Type>(csvPath: string): Promise<Type[]> {
   return await d3.csv(csvPath) as unknown as Type[];
 }
 
-export async function aggregateByTeamAndYear(data: d3.DSVRowArray<string>) {
-  return;
+export async function aggregateByTeamAndYear(data: AthleteEvent[]) {
+  const seen = new Set<string>();
+
+  const dedupedMedals = data.filter(record => {
+    if (!record.Medal) return false;
+
+    const key = `${record.Year}|${record.Event}|${record.NOC}|${record.Medal}`;
+    if (seen.has(key)) return false;
+
+    seen.add(key);
+    return true;
+  })
+
+  const agg = d3.rollup(
+    dedupedMedals,
+    (D) => {
+      const bronze = D.filter((record) => record.Medal === 'Bronze').length;
+      const silver = D.filter((record) => record.Medal === 'Silver').length;
+      const gold = D.filter((record) => record.Medal === 'Gold').length;
+      return [bronze, silver, gold];
+    },
+    (d) => d.Year,
+    (d) => d.NOC,
+  )
+  return agg;
+}
+
+export function createFinalDF(data: d3.InternMap<string, d3.InternMap<string, number[]>>) {
+  let finalDF: MedalAgg[] = [];
+  for (const [year, teamMap] of data) {
+    for (const [team, [bronze, silver, gold]] of teamMap) {
+      finalDF.push({
+        Year: +year,
+        Team: team,
+        Bronze_count: bronze,
+        Silver_count: silver,
+        Gold_count: gold,
+        Medal_sum: bronze + silver*2 + gold*3
+      })
+    }
+  }
+
+  return finalDF;
 }

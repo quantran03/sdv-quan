@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --outfile=dist/main.js && pnpx @tailwindcss/cli -i ./src/styles.css -o ./dist/styles.css"
+    "build": "esbuild src/main.ts --bundle --outfile=dist/main.js && pnpx @tailwindcss/cli -i ./src/styles.css -o ./dist/styles.css",
+    "dev": "pnpm run build && pnpm exec live-server"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "@types/d3": "^7.4.3",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.2",
+    "live-server": "^1.2.2",
     "tailwindcss": "^4.1.4",
     "typescript": "^5.8.3"
   },

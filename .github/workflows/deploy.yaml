@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: build
+      - name: Build
         run: pnpm run build
 
       - name: Godly build step

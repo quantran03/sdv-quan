@@ -11,3 +11,12 @@ type AthleteEvent = {
   Year: string;
   player_id: string;
 };
+
+type MedalAgg = {
+  Year: number;
+  Team: string;
+  Bronze_count: number;
+  Silver_count: number;
+  Gold_count: number;
+  Medal_sum: number;
+}
