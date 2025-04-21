@@ -4,7 +4,7 @@ export async function loadData<Type>(csvPath: string): Promise<Type[]> {
   return await d3.csv(csvPath) as unknown as Type[];
 }
 
-export async function aggregateByTeamAndYear(data: AthleteEvent[]) {
+export function aggregateByTeamAndYear(data: AthleteEvent[]) {
   const seen = new Set<string>();
 
   const dedupedMedals = data.filter(record => {
@@ -46,5 +46,16 @@ export function createFinalDF(data: d3.InternMap<string, d3.InternMap<string, nu
     }
   }
 
+  finalDF.sort(function(x, y){
+    return d3.ascending(x.Year, y.Year);
+  })
+
   return finalDF;
+}
+
+export async function process(file: string) {
+  const raw: AthleteEvent[] = await loadData<AthleteEvent>(file);
+  const agg = aggregateByTeamAndYear(raw);
+  const final = createFinalDF(agg);
+  return final;
 }

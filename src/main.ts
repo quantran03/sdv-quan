@@ -1,7 +1,7 @@
-import * as d3 from "d3";
 import * as preprocess from "./d3/preprocess";
+import * as draw from "./d3/draw"
 
-preprocess.loadData<AthleteEvent>('./data/olympics_dataset.csv')
+preprocess.process('./data/olympics_dataset.csv')
     .then(async (value) => {
-        return;
+        draw.multiLineGraph(value);
     });
