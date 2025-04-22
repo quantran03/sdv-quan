@@ -35,7 +35,7 @@
         <!-- Number Input for Max Team Count -->
         <div class="flex flex-col">
           <label for="teamInput" class="text-sm font-medium text-gray-700 mb-1">
-            Top team threshold
+            Medal threshold
           </label>
           <input
             type="number"
@@ -97,7 +97,17 @@
         </div>
       </div>
       <p class="text-gray-700">
-        This visualisation shows the wins that each Olympic team has achieved over a range of Summer Olympic Events
+        This visualisation shows the weigheted medal sums that each Olympic team has achieved over a speciied period of Summer Olympic Events.
+        <ul class="list-disc text-gray-700 list-inside">
+          <li>You may select the period of time to visualise the data over</li>
+          <li>You may choose to view medal-sum per year or the cumulative sum over the specified period</li>
+          <li>You may choose to view only the top-performing teams
+            <ul class="list-disc list-inside pl-6 text-gray-700">
+              <li>You may customize the threshold used for top-performance</li>
+              <li>Top performing teams are classified as those who reach a maximum medal-sum exceeding the threshold.</li>
+            </ul>
+          </li>
+        </ul>
       </p>
     </div>
   </section>
