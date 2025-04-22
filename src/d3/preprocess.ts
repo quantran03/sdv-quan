@@ -53,6 +53,38 @@ export function createFinalDF(data: d3.InternMap<string, d3.InternMap<string, nu
   return finalDF;
 }
 
+export function getTeams(data: MedalAgg[]) {
+  const ROC = new Set<string>();
+  data.forEach(d => ROC.add(d.Team));
+  return ROC;
+}
+
+export function filterByYearRange(data: MedalAgg[], start: number, end: number) {
+  const newData = data.filter(d => 
+    (start <= d.Year && d.Year <= end)
+  )
+  return newData;
+}
+
+export function filterToOnlyTopTeams(data: MedalAgg[], threshold: number) {
+  const teamMaxMedal = new Map<string, number>();
+  data.forEach((d) => {
+    teamMaxMedal.set(d.Team, Math.max((d.Team in teamMaxMedal ? teamMaxMedal.get(d.Team) : 0) as number, d.Medal_sum))
+  });
+
+  const newData = data.filter(d => {
+    if (teamMaxMedal.get(d.Team)! >= threshold) {
+      console.log(`${d.Team} good, ${teamMaxMedal.get(d.Team)}`)
+      return true;
+    }
+    console.log("filtered out " + d.Team)
+    return false;
+  });
+
+  console.log(teamMaxMedal);
+  return newData;
+}
+
 export async function process(file: string) {
   const raw: AthleteEvent[] = await loadData<AthleteEvent>(file);
   const agg = aggregateByTeamAndYear(raw);
