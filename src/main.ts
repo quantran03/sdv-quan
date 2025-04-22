@@ -14,13 +14,17 @@ preprocess.process('./data/olympics_dataset.csv')
 document.addEventListener("DOMContentLoaded", () => {
     const inputTopTeamThreshold = document.getElementById("teamInput") as HTMLInputElement | null;
     const checkboxEl = document.getElementById("topTeams") as HTMLInputElement | null;
+    const checkboxCum = document.getElementById("cum") as HTMLInputElement | null;
     const inputYearStart = document.getElementById("yearStart") as HTMLInputElement | null;
     const inputYearEnd = document.getElementById("yearEnd") as HTMLInputElement | null;
     
     const handleInputUpdate = () => {
-        if (origData && checkboxEl && inputTopTeamThreshold && inputYearStart && inputYearEnd) {
+        if (origData && checkboxEl && inputTopTeamThreshold && inputYearStart && inputYearEnd && checkboxCum) {
             if (+inputYearStart.value > +inputYearEnd.value) return;
-            const filteredData = preprocess.filterByYearRange(origData, +inputYearStart.value, +inputYearEnd.value)
+            let filteredData = preprocess.filterByYearRange(origData, +inputYearStart.value, +inputYearEnd.value)
+            if (checkboxCum.checked) {
+                filteredData = preprocess.getCumSum(filteredData);
+            }
             if (checkboxEl.checked) {
                 const newData = preprocess.filterToOnlyTopTeams(filteredData, +inputTopTeamThreshold.value);
                 draw.multiLineGraph(newData);
@@ -38,6 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
     if (checkboxEl) {
       checkboxEl.addEventListener("change", handleInputUpdate);
+    }
+
+    if (checkboxCum) {
+        checkboxCum.addEventListener("change", handleInputUpdate);
     }
 
     if (inputYearEnd) {

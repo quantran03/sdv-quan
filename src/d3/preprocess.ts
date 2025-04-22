@@ -74,15 +74,28 @@ export function filterToOnlyTopTeams(data: MedalAgg[], threshold: number) {
 
   const newData = data.filter(d => {
     if (teamMaxMedal.get(d.Team)! >= threshold) {
-      console.log(`${d.Team} good, ${teamMaxMedal.get(d.Team)}`)
       return true;
     }
-    console.log("filtered out " + d.Team)
     return false;
   });
 
   console.log(teamMaxMedal);
   return newData;
+}
+
+export function getCumSum(data: MedalAgg[]): MedalAgg[] {
+  const teamCum = new Map<string, number>();
+  const cumSumData = data.map(d => {
+    if (!teamCum.get(d.Team)) {
+      teamCum.set(d.Team, 0);
+    }
+    teamCum.set(d.Team, teamCum.get(d.Team)! + d.Medal_sum);;
+    return {
+      ...d,
+      Medal_sum: teamCum.get(d.Team)!
+    }
+  })
+  return cumSumData;
 }
 
 export async function process(file: string) {
