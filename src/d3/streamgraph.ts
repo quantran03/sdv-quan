@@ -47,6 +47,11 @@ export function draw(data: MedalAgg[]) {
     .y0(d => y(d[0]))
     .y1(d => y(d[1]));
 
+  const areaZero = d3.area()
+    .x(d => x((d as any).data[0]))
+    .y0(y(0))
+    .y1(y(0));
+
   const svg = d3.create("svg")
     .attr("width", width)
     .attr("height", height)
@@ -54,23 +59,23 @@ export function draw(data: MedalAgg[]) {
     .attr("style", "max-width: 100%; height: auto;");
 
   // Append a path for each series.
-  svg.append("g")
+  const paths = svg.append("g")
     .selectAll()
     .data(series)
     .join("path")
       .attr("fill", (d) => color(d.key) as any)
-      .attr("d", area as any)
+      .attr("d", areaZero as any)
       .attr("class", "myArea")
     .on("mouseover", mouseover)
     .on("mousemove", mousemove)
     .on("mouseleave", mouseleave)
     .append("title")
       .text(d => d.key);
-
+    
   // Append the x axis, and remove the domain line.
   svg.append("g")
       .attr("transform", `translate(0,${height - marginBottom})`)
-      .call(d3.axisBottom(x).tickSizeOuter(0))
+      .call(d3.axisBottom(x).tickSizeOuter(0).tickFormat(d3.format("d")))
       .call(g => g.select(".domain").remove());
   
   // Add the y axis, remove the domain line, add grid lines and a label.
@@ -121,5 +126,11 @@ export function draw(data: MedalAgg[]) {
   container.appendChild(svg.node()!);
 
   currentChild = svg.node();
+
+  d3.selectAll(".myArea")
+    .transition()
+    .duration(1000)
+    .ease(d3.easeCubicInOut)
+    .attr("d", area as any);
 
 }   
