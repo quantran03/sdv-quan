@@ -1,6 +1,6 @@
 import * as preprocess from "./d3/preprocess";
 import * as multilinegraph from "./d3/multilinegraph"
-import * as streamgraph from "./d3/streamgraph";
+import * as streamgraph from "./d3/stackedchart";
 
 let origData: MedalAgg[] | undefined = undefined;
 let origDataCumSum: MedalAgg[] | undefined = undefined;
