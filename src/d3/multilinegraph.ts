@@ -48,7 +48,7 @@ export function draw(data: MedalAgg[]) {
         .attr("y", 20)
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
-        .text("Weighted medal count"));
+        .text("Weighted medal sum"));
   
   const pointsMap = data.map(d => ({
     x: +d.Year,

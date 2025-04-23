@@ -7,6 +7,9 @@ export async function loadData<Type>(csvPath: string): Promise<Type[]> {
 export function aggregateByTeamAndYear(data: AthleteEvent[]) {
   const seen = new Set<string>();
 
+  // The dataset records medals for every player on a team
+  // In a team event, all players get medal, whereas the country it only awarded one.
+  // We must grab each record by unique (Event, Medal, Team, Year) tuple
   const dedupedMedals = data.filter(record => {
     if (!record.Medal) return false;
 
@@ -54,9 +57,9 @@ export function createFinalDF(data: d3.InternMap<string, d3.InternMap<string, nu
 }
 
 export function getTeams(data: MedalAgg[]) {
-  const ROC = new Set<string>();
-  data.forEach(d => ROC.add(d.Team));
-  return ROC;
+  const NOC = new Set<string>();
+  data.forEach(d => NOC.add(d.Team));
+  return NOC;
 }
 
 export function filterByYearRange(data: MedalAgg[], start: number, end: number) {

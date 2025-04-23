@@ -19,8 +19,21 @@
   <section class="py-16 border-b">
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-2xl font-semibold mb-4">Data processing</h2>
+      <p class="text-gray-700 pb-1">
+        The dataset used was <a class="underline" href="https://www.kaggle.com/stefanydeoliveira">Stefany De Oliveira's</a> Kaggle <a class="underline" href="https://www.kaggle.com/datasets/stefanydeoliveira/summer-olympics-medals-1896-2024/data">Summer Olympics Medals (1896-2024)</a> dataset
+      </p>
+      <p class="text-gray-700 pb-1">
+        The dataset was first filtererd to ensure for each record, the tuple (Team, Event, Year, Medal). This is due to the assumption that in Team events, all members of a team would receive a medal but the country itself would only receive one.
+        We then aggregate (group) by Olympic Event, then Team, with this we can sum up the number of gold, silver and bronze medals each team has acquired in an olympic event.
+      </p>
       <p class="text-gray-700">
-        Things n' stuff
+        For our visualisations, we need to consolidate the three medal counts into one. We will do this by taking a weighted sum, in which gold medals are valued higher then silvers, and silvers higher than bronze.
+        The simple formula for weighting the medals are as follows.
+      </p>
+        $$3 \cdot \text{gold_count} + 2 \cdot \text{silver_count} + \text{bronze_count}$$
+      <p class="text-gray-700">
+        This project was produced using <a class="underline" href="https://d3js.org/">D3</a> with <a href="https://www.typescriptlang.org/" class="underline">TypeScript</a> for data processing/visualisation, and <a href="https://tailwindcss.com/" class="underline">Tailwind</a> for page styling.
+        Display of mathematical notation handled by <a class="underline" href="https://www.mathjax.org/">MathJax</a>
       </p>
     </div>
   </section>
@@ -28,9 +41,10 @@
   <!-- Section 1 -->
   <section class="py-16 border-b">
     <div class="max-w-4xl mx-auto px-4">
-      <h2 class="text-2xl font-semibold mb-4">Visualization 1: Medal sum over time line-graph</h2>
+      <h2 class="text-2xl font-semibold mb-4">Visualization 1: Multiple line-graph</h2>
       <p class="text-gray-700 pb-1">
         This visualisation shows the weighted medal sums that each Olympic team has achieved over a specified period of Summer Olympic Events.
+      </p>
       <div id="viz1" class="w-full h-[400px] bg-gray-200 flex items-center justify-center rounded-lg mb-4">
       </div>
       <div class="flex items-end gap-6 w-ma mb-6">
@@ -42,7 +56,7 @@
           <input
             type="number"
             id="teamInput"
-            placeholder="100"
+            placeholder="1000"
             value="100"
             maxlength="4"
             class="w-24 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -80,7 +94,7 @@
               type="number"
               id="yearStart"
               min="1896"
-              max="2024"
+              max="2020"
               value="1896"
               class="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -108,7 +122,6 @@
             </ul>
           </li>
         </ul>
-      </p>
     </div>
   </section>
 
@@ -116,33 +129,95 @@
   <section class="py-16 border-b bg-gray-50">s
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-2xl font-semibold mb-4">Visualization 2: Normalised stacked area chart</h2>
-      <div id="viz2" class="w-full h-[400px] bg-gray-200 flex items-center justify-center rounded-lg mb-4">
-        
-      </div>
-      <p class="text-gray-700">
-        This chart compares different categories based on their relative performance, helping to highlight outliers and patterns.
+      <p class="text-gray-700 pb-1">
+        This visualisation shows the proportion of cumulative weighted medal sums that each country had by the end of each Summer Olympics.
       </p>
+      <div id="viz2" class="w-full h-[400px] bg-gray-200 flex items-center justify-center rounded-lg mb-4">  
+      </div>
+      <div class="flex items-end gap-6 w-ma mb-6">
+        <!-- Number Input for Max Team Count -->
+        <div class="flex flex-col">
+          <label for="teamInput2" class="text-sm font-medium text-gray-700 mb-1">
+            Medal threshold
+          </label>
+          <input
+            type="number"
+            id="teamInput2"
+            placeholder="1000"
+            value="1000"
+            maxlength="4"
+            class="w-24 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      
+        <!-- Checkbox for Top Teams -->
+        <div class="flex items-center h-[38px] px-3 border border-gray-300 rounded-md shadow-sm">
+          <input
+            type="checkbox"
+            id="topTeams2"
+            class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <label for="topTeams2" class="ml-2 text-sm text-gray-700">Show only top teams</label>
+        </div>
+      </div>
+      
+      <!-- Year Start and Year End Inputs -->
+      <div class="max-w-md mb-6">
+        <label class="text-sm font-medium text-gray-700 mb-1">Select Year Range</label>
+        <div class="flex gap-4">
+          <div class="flex flex-col">
+            <label for="yearStart2" class="text-sm text-gray-700">Start Year</label>
+            <input
+              type="number"
+              id="yearStart2"
+              min="1896"
+              max="2020"
+              value="1896"
+              class="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div class="flex flex-col">
+            <label for="yearEnd2" class="text-sm text-gray-700">End Year</label>
+            <input
+              type="number"
+              id="yearEnd2"
+              min="1900"
+              max="2024"
+              value="2024"
+              class="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+      <ul class="list-disc text-gray-700 list-inside">
+        <li>You may select the period of time to visualise the data over</li>
+        <li>You may choose to view only the top-performing teams
+          <ul class="list-disc list-inside pl-6 text-gray-700">
+            <li>You may customize the threshold used for top-performance</li>
+            <li>Top performing teams are classified as those who reach a maximum medal-sum exceeding the threshold.</li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </section>
 
-  <!-- Section 3 -->
   <section class="py-16 border-b">
     <div class="max-w-4xl mx-auto px-4">
-      <h2 class="text-2xl font-semibold mb-4">Visualization 3: Geographic Distribution</h2>
-      <div id="viz3" class="w-full h-[400px] bg-gray-200 flex items-center justify-center rounded-lg mb-4">
-        <span class="text-gray-500">[Placeholder for D3]</span>
+      <h2 class="text-2xl font-semibold mb-4">Bibliography</h2>
+      <div class="underline">
+        <p class="text-gray-800"><a href="https://observablehq.com/@d3/multi-line-chart/2">D3 multiple series line chart template code</a></p>
+        <p class="text-gray-800"><a href="https://observablehq.com/@d3/normalized-stacked-area-chart/2">D3 normalized stacked area chart template code</a></p>
+        <p class="text-gray-800"><a href="https://d3-graph-gallery.com/graph/streamgraph_template.html">Interactive D3 streamgraph from D3 graph gallery</a></p>
       </div>
-      <p class="text-gray-700">
-        This map visualizes geographical distribution and regional patterns in the data, giving spatial context to the insights.
-      </p>
     </div>
-  </section>
+</section>
 
-  <!-- Footer -->
-  <footer class="py-12 text-center bg-gray-100 text-sm text-gray-600">
+<!-- Footer -->
+<footer class="py-12 text-center bg-gray-100 text-sm text-gray-600">
     &copy; 2025 Quan Tran. All rights reserved.
   </footer>
 
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script src="./dist/main.js"></script>
 </body>
 </html>
