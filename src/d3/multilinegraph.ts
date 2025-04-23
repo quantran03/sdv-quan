@@ -4,7 +4,7 @@ import * as preprocess from "./preprocess"
 // Adapted from https://observablehq.com/@d3/multi-line-chart/2
 let currentChild: SVGSVGElement | null | undefined = undefined;
 
-export function multiLineGraph(data: MedalAgg[]) {
+export function draw(data: MedalAgg[]) {
   const container = document.getElementById('viz1');
   if (!container)
     return;

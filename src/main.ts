@@ -1,12 +1,13 @@
 import * as preprocess from "./d3/preprocess";
-import * as draw from "./d3/draw"
+import * as multilinegraph from "./d3/multilinegraph"
 
 let origData: MedalAgg[] | undefined = undefined;
 
 preprocess.process('./data/olympics_dataset.csv')
     .then(async (value) => {
+        console.log(value)
         origData = value;
-        draw.multiLineGraph(value);
+        multilinegraph.draw(value);
     }
 );
 
@@ -27,9 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (checkboxEl.checked) {
                 const newData = preprocess.filterToOnlyTopTeams(filteredData, +inputTopTeamThreshold.value);
-                draw.multiLineGraph(newData);
+                multilinegraph.draw(newData);
             } else {
-                draw.multiLineGraph(filteredData);
+                multilinegraph.draw(filteredData);
             }
         }
     };
