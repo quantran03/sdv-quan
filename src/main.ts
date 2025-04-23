@@ -1,5 +1,6 @@
 import * as preprocess from "./d3/preprocess";
 import * as multilinegraph from "./d3/multilinegraph"
+import * as streamgraph from "./d3/streamgraph";
 
 let origData: MedalAgg[] | undefined = undefined;
 
@@ -8,6 +9,7 @@ preprocess.process('./data/olympics_dataset.csv')
         console.log(value)
         origData = value;
         multilinegraph.draw(value);
+        streamgraph.draw(preprocess.getCumSum(value));
     }
 );
 

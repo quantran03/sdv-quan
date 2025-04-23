@@ -33,7 +33,7 @@ export function draw(data: MedalAgg[]) {
   // Add the horizontal axis.
   svg.append("g")
     .attr("transform", `translate(0,${height - marginBottom})`)
-    .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
+    .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0).tickFormat(d3.format("d")));
 
   // Add the vertical axis.
   svg.append("g")
@@ -138,54 +138,3 @@ export function draw(data: MedalAgg[]) {
     svg.dispatch("input");
   }
 }
-
-export function streamGraph(data: MedalAgg[]) {
-  const container = document.getElementById('viz2');
-  if (!container)
-    return;
-
-  const width = container.clientWidth - 5;
-  const height = container.clientHeight - 5;
-  const marginTop = 40;
-  const marginRight = 20;
-  const marginBottom = 30;
-  const marginLeft = 40;
-
-  const svg = d3.create("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("viewBox", [0, 0, width, height])
-    .attr("style", "max-width: 100%; height: auto; overflow: visible; font: 10px sans-serif;");
-
-  const x = d3.scaleLinear()
-    .domain([d3.min(data, d => d.Year)!, d3.max(data, d => d.Year)!])
-    .range([marginLeft, width! - marginRight]);
-
-  const y = d3.scaleLinear()
-    .domain([-d3.max(data, d => d.Medal_sum)!, d3.max(data, d => d.Medal_sum)!]).nice()
-    .range([height! - marginBottom, marginTop])
-
-  // Add the vertical axis.
-  svg.append("g")
-    .attr("transform", `translate(${marginLeft},0)`)
-    .call(d3.axisLeft(y))
-    .call(g => g.select(".domain").remove())
-    .call(g => g.selectAll(".tick line").clone()
-        .attr("x2", width - marginLeft - marginRight)
-        .attr("stroke-opacity", 0.1))
-    .call(g => g.append("text")
-        .attr("x", -marginLeft)
-        .attr("y", 20)
-        .attr("fill", "currentColor")
-        .attr("text-anchor", "start")
-        .text("Weighted medal count"));
-  
-
-  const series = d3.stack()
-    .offset(d3.stackOffsetWiggle)
-    .order(d3.stackOrderInsideOut)
-    .keys(d3.union(data.map(d => d.Team)))
-    .value(([, D]: any, key) => D.get(key).Medal_sum)
-    //(d3.index(data, d => d.Year, d => d.Team));
-    
-}   
