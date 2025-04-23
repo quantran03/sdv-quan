@@ -1,4 +1,4 @@
-# Olympic performancee data visualisation
+# Olympic performance data visualisation
 This was a project created for the Introduction to Data Visualisation course at King's College London.
 
 ## Build instructions
