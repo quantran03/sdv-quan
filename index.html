@@ -23,7 +23,7 @@
         The dataset used was <a class="underline" href="https://www.kaggle.com/stefanydeoliveira">Stefany De Oliveira's</a> Kaggle <a class="underline" href="https://www.kaggle.com/datasets/stefanydeoliveira/summer-olympics-medals-1896-2024/data">Summer Olympics Medals (1896-2024)</a> dataset
       </p>
       <p class="text-gray-700 pb-1">
-        The dataset was first filtererd to ensure for each record, the tuple (Team, Event, Year, Medal). This is due to the assumption that in Team events, all members of a team would receive a medal but the country itself would only receive one.
+        The dataset was first filtererd to ensure for each record, the tuple (Team, Event, Year, Medal) is unique. This is due to the assumption that in Team events, all members of a team would receive a medal but the country itself would only receive one.
         We then aggregate (group) by Olympic Event, then Team, with this we can sum up the number of gold, silver and bronze medals each team has acquired in an olympic event.
       </p>
       <p class="text-gray-700">
